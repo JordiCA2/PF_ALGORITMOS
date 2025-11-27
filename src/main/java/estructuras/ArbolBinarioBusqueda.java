@@ -2,6 +2,9 @@ package estructuras;
 
 import modelos.Producto;
 
+
+// ABB ordenado por codigo de Producto
+// Complejidad O(log n), en peor caso O(n)
 public class ArbolBinarioBusqueda {
 
     private static class Nodo {
@@ -16,6 +19,7 @@ public class ArbolBinarioBusqueda {
     }
     private Nodo raiz;
 
+    // Insertar producto si el codigo no existe
     public boolean insertar(Producto p) {
         if (p == null || p.getCodigo() == null) {
             return false;
@@ -46,6 +50,7 @@ public class ArbolBinarioBusqueda {
         }
     }
 
+    // Buscar por codigo y retornar producto
     public Producto buscar(String codigo) {
         if (codigo == null) {
             return null;
@@ -65,6 +70,7 @@ public class ArbolBinarioBusqueda {
         return null;
     }
 
+    // Eliminar por codigo manteniendo el ABB
     public boolean eliminar(String codigo) {
         if (codigo == null) {
             return false;
@@ -108,6 +114,7 @@ public class ArbolBinarioBusqueda {
         return nodo;
     }
 
+    // Retornar productos ordenados por codigo (inorden)
     public Producto[] obtenerInOrder() {
         int n = contar(raiz);
         Producto[] arr = new Producto[n];
@@ -132,6 +139,7 @@ public class ArbolBinarioBusqueda {
         llenarInOrder(nodo.derecho, arr, idx);
     }
 
+    // Retornar productos con precio en (min, max)
     public Producto[] buscarPorRangoPrecio(double min, double max) {
         int c = contarRangoPrecio(raiz, min, max);
         Producto[] arr = new Producto[c];
@@ -164,6 +172,8 @@ public class ArbolBinarioBusqueda {
         llenarRangoPrecio(nodo.derecho, min, max, arr, idx);
     }
 
+    
+    // Retorna productos con stock menor a la cantidadMinima
     public Producto[] buscarStockCritico(int cantidadMinima) {
         int c = contarStockCritico(raiz, cantidadMinima);
         Producto[] arr = new Producto[c];

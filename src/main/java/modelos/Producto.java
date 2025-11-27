@@ -1,5 +1,7 @@
 package modelos;
 
+// Entidad de inventario
+// Clave unica del arbol: codigo
 public class Producto {
     private String codigo;
     private String nombre;
@@ -9,6 +11,7 @@ public class Producto {
     private boolean esBiodegradable;
     private String materialesReciclados;
     
+    // Creacion de un producto con los atributos minimos requeridos
     public Producto(String codigo, String nombre, String categoria, double precio, int stock, boolean esBiodegradable, String materialesReciclados) {
         this.codigo = codigo;
         this.nombre = nombre;
@@ -75,6 +78,7 @@ public class Producto {
         this.materialesReciclados = materialesReciclados;
     }
     
+    // Representacion compacta para imprimir en consola
     public String toString() {
         return String.format(
         "Producto[codigo=%s, nombre=%s, categoria=%s, precio=%.2f, stock=%d, esBiodegradable=%s, materialesReciclados=%s]",
