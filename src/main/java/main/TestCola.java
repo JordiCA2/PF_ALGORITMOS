@@ -4,6 +4,9 @@ import estructuras.Cola;
 import modelos.Entrega;
 import modelos.Pedido;
 import modelos.EstadoPedido;
+import modelos.TipoCliente;
+import modelos.TipoEntrega;
+
 import java.time.LocalDateTime;
 
 public class TestCola {
@@ -12,16 +15,23 @@ public class TestCola {
 
         Cola<Entrega> cola = new Cola<>();
 
-        // Crear pedidos
-        Pedido p1 = new Pedido("P1", EstadoPedido.PENDIENTE, 50.0);
-        Pedido p2 = new Pedido("P2", EstadoPedido.PENDIENTE, 75.0);
-        Pedido p3 = new Pedido("P3", EstadoPedido.PENDIENTE, 30.0);
+        // Crear pedidos con el constructor REAL de Pedido
+        Pedido p1 = new Pedido("P1", "Juan Pérez", "Av. Lima 123",
+                TipoCliente.REGULAR, TipoEntrega.NORMAL);
+
+        Pedido p2 = new Pedido("P2", "Ana Gómez", "Av. Grau 404",
+                TipoCliente.PREMIUM, TipoEntrega.EXPRESS);
+
+        Pedido p3 = new Pedido("P3", "Luis Torres", "Jr. Puno 999",
+                TipoCliente.REGULAR, TipoEntrega.EXPRESS);
 
         // Crear entregas
         Entrega e1 = new Entrega("E1", p1, "Av. Lima 123", "Lima",
                 "Carlos", LocalDateTime.now().plusMinutes(30));
+
         Entrega e2 = new Entrega("E2", p2, "Av. Grau 404", "Callao",
                 "Ana", LocalDateTime.now().plusMinutes(40));
+
         Entrega e3 = new Entrega("E3", p3, "Jr. Puno 999", "Surco",
                 "Luis", LocalDateTime.now().plusMinutes(20));
 
@@ -41,7 +51,7 @@ public class TestCola {
         System.out.println("\n📌 Cola actual:");
         mostrarCola(cola);
 
-        // MARCAR COMO ENTREGADO
+        // MARCAR ENTREGA COMO COMPLETADA
         System.out.println("\n🏁 Marcando entrega como completada...");
         atendida.marcarEntregado(LocalDateTime.now());
 
@@ -52,7 +62,6 @@ public class TestCola {
         mostrarCola(cola);
     }
 
-    // Método para mostrar usando tu toArray()
     private static void mostrarCola(Cola<Entrega> cola) {
         Object[] arr = cola.toArray();
         for (Object o : arr) {
