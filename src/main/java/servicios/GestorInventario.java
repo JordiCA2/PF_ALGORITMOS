@@ -13,6 +13,10 @@ public class GestorInventario {
         return arbol.insertar(p);
     }
     
+    // Eliminar
+    public boolean eliminarProducto(String codigo) {
+        return arbol.eliminar(codigo);
+    }
     // Actualiza el stock del producto identificado por codigo
     public boolean actualizarStock(String codigo, int nuevoStock) {
         Producto p = arbol.buscar(codigo);
@@ -42,4 +46,51 @@ public class GestorInventario {
     public Producto[] productosPorRangoPrecio(double min, double max) {
         return arbol.buscarPorRangoPrecio(min, max);
     }
+
+    // Listar por stock
+    public Producto[] listarPorStockAsc() {
+        Producto[] arr = arbol.obtenerInOrder();
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[i].getStock() > arr[j].getStock()) {
+                    Producto tmp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = tmp;
+                }
+            }
+        }
+        return arr;
+    }
+    
+    // Listar por precio
+    public Producto[] listarPrecioAsc() {
+        Producto[] arr = arbol.obtenerInOrder();
+        for (int i = 0; i < arr.length -1; i++) {
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[i].getPrecio() > arr[j].getPrecio()) {
+                    Producto tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+                }
+            }
+        }
+        return arr;
+    }
+
+    public Producto[] productosPorCategoria(String categoria) {
+        Producto[] arr = arbol.obtenerInOrder(); // si no está público, usar arbol.obtenerInOrder()
+        int count = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].getCategoria().equalsIgnoreCase(categoria)) {
+                count++;
+            }
+        }
+        Producto[] out = new Producto[count];
+        int k = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].getCategoria().equalsIgnoreCase(categoria)) {
+                out[k++] = arr[i];
+            }
+        }
+        return out;
+    }
+
 }

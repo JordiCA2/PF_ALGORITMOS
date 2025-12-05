@@ -2,6 +2,7 @@ package servicios;
 
 import estructuras.Pila;
 import modelos.Operacion;
+import modelos.TipoOperacion;
 
 public class GestorHistorial {
 
@@ -14,8 +15,8 @@ public class GestorHistorial {
     private GestorHistorial() {}
 
     // Registrar una operación
-    public void registrar(String tipo, Object antes, Object despues) {
-        Operacion op = new Operacion(tipo, antes, despues);
+    public void registrar(TipoOperacion tipo, String descripcion, String detalles, String usuario, Object antes, Object despues) {
+        Operacion op = new Operacion(tipo, descripcion, detalles, usuario, antes, despues);
         historial.push(op);
         System.out.println("Registrado en historial: " + op);
     }
@@ -25,6 +26,64 @@ public class GestorHistorial {
         return historial.pop();
     }
 
+    
+    public boolean deshacerUltima(GestorInventario inv, GestorPedidos ped) {
+        Operacion op = historial.pop();
+        if (op == null) {
+            return false;
+        }
+        switch (op.getTipoOp()) {
+            case AGREGAR -> {
+                if (op.getDespues() instanceof modelos.Producto prod) {
+                    return inv.eliminarProducto(prod.getCodigo());
+                }
+            }
+            case ELIMINAR -> {
+                if (op.getAntes() instanceof modelos.Producto prod) {
+                    return inv.agregarProducto(prod.getCodigo(), prod.getNombre(), prod.getCategoria(), prod.getPrecio(), prod.getStock(), prod.isEsBiodegradable(), prod.getMaterialesReciclados());
+                }
+            }
+            case MODIFICAR -> {
+                if (op.getAntes() instanceof modelos.Producto prod) {
+                    modelos.Producto actual = inv.buscarProducto(prod.getCodigo());
+                    if (actual == null) {
+                        return false;
+                    }
+                    actual.setNombre(prod.getNombre());
+                    actual.setCategoria(prod.getCategoria());
+                    actual.setPrecio(prod.getPrecio());
+                    actual.setStock(prod.getStock());
+                    actual.setEsBiodegradable(prod.isEsBiodegradable());
+                    actual.setMaterialesReciclados(prod.getMaterialesReciclados());
+                    return true;
+                }
+            }
+            case PROCESAR_PEDIDO -> {
+                if (op.getDespues() instanceof modelos.Pedido pedido) {
+                    Object[] arr = pedido.getListaItems().toArray();
+                    for (int i = 0; i < arr.length; i++) {
+                        modelos.ItemPedido it = (modelos.ItemPedido) arr[i];
+                        modelos.Producto prod = inv.buscarProducto(it.getCodigoProducto());
+                        if (prod != null) {
+                            inv.actualizarStock(prod.getCodigo(), prod.getStock() + it.getCantidad());
+                        }
+                    }
+                    pedido.setEstado(modelos.EstadoPedido.PENDIENTE);
+                    return true;
+                }
+            }
+            case CAMBIAR_ESTADO -> {
+                if (op.getAntes() instanceof modelos.Pedido pedido) {
+                    // restaurar estado anterior
+                    pedido.setEstado(((modelos.Pedido) op.getAntes()).getEstado());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    
     // Mostrar historial sin eliminarlo
     public void mostrarHistorial() {
         if (historial.estaVacia()) {
@@ -47,6 +106,39 @@ public class GestorHistorial {
         while (!aux.estaVacia()) {
             historial.push(aux.pop());
         }
+    }
+
+    public void mostrarUltimas(int n) {
+        if (n <= 0) {
+            return;
+        }
+        estructuras.Pila<Operacion> aux = new estructuras.Pila<>();
+        int mostradas = 0;
+        while (!historial.estaVacia() && mostradas < n) {
+            Operacion op = historial.pop();
+            System.out.println(op);
+            aux.push(op);
+            mostradas++;
+        }
+        while (!aux.estaVacia()) {
+            historial.push(aux.pop());
+        }
+    }
+
+    public Operacion[] buscarPorTipo(TipoOperacion t) {
+        estructuras.Pila<Operacion> aux = new estructuras.Pila<>();
+        java.util.ArrayList<Operacion> res = new java.util.ArrayList<>();
+        while (!historial.estaVacia()) {
+            Operacion op = historial.pop();
+            if (op.getTipoOp() == t) {
+                res.add(op);
+            }
+            aux.push(op);
+        }
+        while (!aux.estaVacia()) {
+            historial.push(aux.pop());
+        }
+        return res.toArray(new Operacion[0]);
     }
 
     public boolean hayOperaciones() {

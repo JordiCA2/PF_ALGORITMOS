@@ -1,18 +1,28 @@
 package interfaz;
 
 import java.util.Scanner;
+import servicios.GestorInventario;
 
 public class MenuPrincipal {
 
     private Scanner scanner;             // ← FALTABA ESTO
     private MenuInventario menuInventario;
+    private GestorInventario inventario;
     private MenuPedidos menuPedidos;
     private MenuReportes menuReportes;
 
     public MenuPrincipal(Scanner scanner) {
         this.scanner = scanner;          // ← GUARDARLO COMO ATRIBUTO
-        this.menuInventario = new MenuInventario(scanner);
-        this.menuPedidos = new MenuPedidos(scanner);
+        this.inventario = new GestorInventario();
+        this.menuInventario = new MenuInventario(scanner, inventario);
+        this.menuPedidos = new MenuPedidos(scanner, inventario);
+        this.menuReportes = new MenuReportes(scanner);
+    }
+    
+    public MenuPrincipal(Scanner scanner, GestorInventario inventario) {
+        this.scanner = scanner;
+        this.menuInventario = new MenuInventario(scanner, inventario);
+        this.menuPedidos = new MenuPedidos(scanner, inventario);
         this.menuReportes = new MenuReportes(scanner);
     }
 

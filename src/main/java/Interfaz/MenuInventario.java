@@ -10,8 +10,9 @@ public class MenuInventario {
     private Scanner scanner;
     private GestorInventario inventario = new GestorInventario();
 
-    public MenuInventario(Scanner scanner) {
+    public MenuInventario(Scanner scanner, GestorInventario inventario) {
         this.scanner = scanner;
+        this.inventario = inventario;
     }
 
     public void mostrar() {
@@ -19,24 +20,41 @@ public class MenuInventario {
         do {
             System.out.println("\n--- MENÚ INVENTARIO ---");
             System.out.println("1. Agregar producto");
-            System.out.println("2. Listar productos");
+            System.out.println("2. Listar productos (orden por codigo)");
             System.out.println("3. Buscar producto");
             System.out.println("4. Actualizar stock");
             System.out.println("5. Reporte stock bajo");
-            System.out.println("6. Volver");
+            System.out.println("6. Eliminar producto");
+            System.out.println("7. Listar por stock (ascendente)");
+            System.out.println("8. Listar por precio (ascedente)");
+            System.out.println("9. Listar por rango de precio");
+            System.out.println("10. Volver");
             System.out.print("Opción: ");
 
             opcion = Integer.parseInt(scanner.nextLine());
 
             switch (opcion) {
-                case 1 -> agregarProducto();
-                case 2 -> inventario.listarTodo();
-                case 3 -> buscarProducto();
-                case 4 -> actualizarStock();
-                case 5 -> reporteStockBajo();
+                case 1 ->
+                    agregarProducto();
+                case 2 ->
+                    inventario.listarTodo();
+                case 3 ->
+                    buscarProducto();
+                case 4 ->
+                    actualizarStock();
+                case 5 ->
+                    reporteStockBajo();
+                case 6 ->
+                    eliminarProducto();
+                case 7 ->
+                    listarPorStockAsc();
+                case 8 ->
+                    listarPorPrecioAsc();
+                case 9 ->
+                    listarPorRangoPrecio();
             }
 
-        } while (opcion != 6);
+        } while (opcion != 10);
     }
 
     private void agregarProducto() {
@@ -65,6 +83,13 @@ public class MenuInventario {
         System.out.println(ok ? "✔ Producto agregado." : "❌ Ya existe un producto con ese código.");
     }
 
+    private void eliminarProducto() {
+        System.out.print("Código: ");
+        String codigo = scanner.nextLine();
+        boolean ok = inventario.eliminarProducto(codigo);
+        System.out.println(ok ? "Eliminado." : "Producto no existe.");
+    }
+
     private void buscarProducto() {
         System.out.print("Código: ");
         String codigo = scanner.nextLine();
@@ -88,5 +113,34 @@ public class MenuInventario {
         System.out.print("Límite: ");
         int limite = Integer.parseInt(scanner.nextLine());
         inventario.generarReporteStockBajo(limite);
+    }
+
+    private void listarPorStockAsc() {
+        Producto[] arr = inventario.listarPorStockAsc();
+        for (int i = 0; i < arr.length; i++) {
+            System.out.println(arr[i]);
+        }
+    }
+
+    private void listarPorPrecioAsc() {
+        Producto[] arr = inventario.listarPrecioAsc();
+        for (int i = 0; i < arr.length; i++) {
+            System.out.println(arr[i]);
+        }
+    }
+
+    private void listarPorRangoPrecio() {
+        System.out.print("Precio mínimo: ");
+        double min = Double.parseDouble(scanner.nextLine());
+        System.out.print("Precio máximo: ");
+        double max = Double.parseDouble(scanner.nextLine());
+        Producto[] arr = inventario.productosPorRangoPrecio(min, max);
+        if (arr.length == 0) {
+            System.out.println("(sin resultados)");
+        } else {
+            for (int i = 0; i < arr.length; i++) {
+                System.out.println(arr[i]);
+            }
+        }
     }
 }

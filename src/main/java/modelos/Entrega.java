@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public class Entrega {
 
+    private String idPedido;
     private String idEntrega;
     private Pedido pedido;
     private String direccion;
@@ -18,7 +19,7 @@ public class Entrega {
 
     public Entrega(String idEntrega, Pedido pedido, String direccion, String distrito,
             String repartidor, LocalDateTime horaEstimada) {
-
+        this.idPedido = pedido != null ? pedido.getId() : null; // opcional
         this.idEntrega = idEntrega;
         this.pedido = pedido;
         this.direccion = direccion;
@@ -30,7 +31,9 @@ public class Entrega {
         this.tiempoEntregaMinutos = -1;
     }
 
-    /** Marca la entrega como completada */
+    /**
+     * Marca la entrega como completada
+     */
     public void marcarEntregado(LocalDateTime now) {
 
         this.horaReal = now;
@@ -39,8 +42,8 @@ public class Entrega {
         this.estado = EstadoEntrega.ENTREGADO;
 
         if (this.horaEstimada != null) {
-            this.tiempoEntregaMinutos = 
-                java.time.Duration.between(this.horaEstimada, this.horaReal).toMinutes();
+            this.tiempoEntregaMinutos
+                    = java.time.Duration.between(this.horaEstimada, this.horaReal).toMinutes();
         } else {
             this.tiempoEntregaMinutos = -1;
         }
@@ -50,12 +53,16 @@ public class Entrega {
         }
     }
 
-    /** Getter estándar */
+    /**
+     * Getter estándar
+     */
     public long getTiempoEntregaMinutos() {
         return tiempoEntregaMinutos;
     }
 
-    /** Método adicional requerido por GestorEntregas */
+    /**
+     * Método adicional requerido por GestorEntregas
+     */
     public long tiempoEntregaMinutos() {
         return tiempoEntregaMinutos;
     }
@@ -74,6 +81,18 @@ public class Entrega {
 
     public Pedido getPedido() {
         return pedido;
+    }
+
+    public void setRepartidor(String r) {
+        this.repartidor = r;
+    }
+
+    public void setEstado(EstadoEntrega e) {
+        this.estado = e;
+    }
+
+    public void setHoraEstimada(LocalDateTime h) {
+        this.horaEstimada = h;
     }
 
     @Override
