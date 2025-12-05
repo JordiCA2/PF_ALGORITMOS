@@ -29,7 +29,7 @@ public class MenuPrincipal {
     public void mostrar() {
         int opcion;
         do {
-            System.out.println("\n===== SISTEMA DE GESTIÓN TPP =====");
+            System.out.println("\n===== SISTEMA DE GESTIÓN  EcoDelivery =====");
             System.out.println("1. Inventario");
             System.out.println("2. Pedidos");
             System.out.println("3. Reportes");
