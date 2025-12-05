@@ -2,6 +2,7 @@ package modelos;
 
 import java.time.LocalDateTime;
 
+// Registro de operacion para historial 
 public class Operacion {
 
     private String tipo;         // Tipo de operación (AGREGAR_PRODUCTO, REGISTRAR_PEDIDO, etc)

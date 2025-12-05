@@ -4,12 +4,15 @@ import interfaz.MenuPrincipal;
 import java.util.Scanner;
 import servicios.GestorInventario;
 
-// Prueba del modulo 1 por consola
+
 public class Main {
 
     public static void main(String[] args) {
+        // Inicia el menu principal y precarga productos
         Scanner scanner = new Scanner(System.in);
         GestorInventario inventario = new GestorInventario();
+        
+        // Datos de ejemplo
         inventario.agregarProducto("P100", "Vaso", "Utensilios", 3.5, 50, true, "Papel reciclado");
         inventario.agregarProducto("P200", "Bolsa", "Empaque", 0.8, 10, true, "Plastico reciclado");
         inventario.agregarProducto("P150", "Caja", "Empaque", 2.2, 5, true, "Carton reciclado");
@@ -22,6 +25,8 @@ public class Main {
         inventario.agregarProducto("P600", "Cuaderno", "Papeleria", 3.0, 80, true, "Papel reciclado");
         inventario.agregarProducto("P610", "Lapicero", "Papeleria", 1.2, 200, false, "-");
         inventario.agregarProducto("P620", "Carpeta", "Papeleria", 2.5, 70, true, "Carton reciclado");
+        
+        // Inyecta inventario compartido en el menu principal
         MenuPrincipal menu = new MenuPrincipal(scanner, inventario);
         menu.mostrar();
     }

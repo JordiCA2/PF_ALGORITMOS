@@ -5,16 +5,19 @@ import servicios.GestorInventario;
 
 import java.util.Scanner;
 
+// Menu de inventario
 public class MenuInventario {
 
     private Scanner scanner;
     private GestorInventario inventario = new GestorInventario();
 
+    // Constructor que usa inventario compartido inyectado
     public MenuInventario(Scanner scanner, GestorInventario inventario) {
         this.scanner = scanner;
         this.inventario = inventario;
     }
 
+    // Muestra opciones y dirige operaciones
     public void mostrar() {
         int opcion;
         do {
@@ -57,6 +60,7 @@ public class MenuInventario {
         } while (opcion != 10);
     }
 
+    // Registra producto
     private void agregarProducto() {
         System.out.print("Código: ");
         String codigo = scanner.nextLine();
@@ -83,6 +87,7 @@ public class MenuInventario {
         System.out.println(ok ? "✔ Producto agregado." : "❌ Ya existe un producto con ese código.");
     }
 
+    // Elimina un producto por codigo
     private void eliminarProducto() {
         System.out.print("Código: ");
         String codigo = scanner.nextLine();
@@ -90,6 +95,7 @@ public class MenuInventario {
         System.out.println(ok ? "Eliminado." : "Producto no existe.");
     }
 
+    // busca y muestra un producto por codigo
     private void buscarProducto() {
         System.out.print("Código: ");
         String codigo = scanner.nextLine();
@@ -98,6 +104,7 @@ public class MenuInventario {
         System.out.println(p != null ? p : "❌ No encontrado.");
     }
 
+    // Actualiza el stock de un producto
     private void actualizarStock() {
         System.out.print("Código: ");
         String codigo = scanner.nextLine();
@@ -109,12 +116,14 @@ public class MenuInventario {
         System.out.println(ok ? "✔ Actualizado." : "❌ Producto no existe.");
     }
 
+    // Repore de productos con stock bajo
     private void reporteStockBajo() {
         System.out.print("Límite: ");
         int limite = Integer.parseInt(scanner.nextLine());
         inventario.generarReporteStockBajo(limite);
     }
 
+    // Lista productos por stock ascendente
     private void listarPorStockAsc() {
         Producto[] arr = inventario.listarPorStockAsc();
         for (int i = 0; i < arr.length; i++) {
@@ -122,6 +131,7 @@ public class MenuInventario {
         }
     }
 
+    // Lista productos por precio ascendente
     private void listarPorPrecioAsc() {
         Producto[] arr = inventario.listarPrecioAsc();
         for (int i = 0; i < arr.length; i++) {
@@ -129,6 +139,7 @@ public class MenuInventario {
         }
     }
 
+    // Lista productos entre un rango de precio
     private void listarPorRangoPrecio() {
         System.out.print("Precio mínimo: ");
         double min = Double.parseDouble(scanner.nextLine());

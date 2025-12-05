@@ -6,6 +6,7 @@ import modelos.EstadoEntrega;
 
 import java.time.LocalDateTime;
 
+// Gestor de entregas, administra ruta diaria y estadisticas
 public class GestorEntregas {
 
     private Cola<Entrega> cola = new Cola<>();
@@ -55,10 +56,12 @@ public class GestorEntregas {
         System.out.println("Repartidor asignado a " + arr.length + " entregas");
     }
 
+    // Total de entregaas completadas en el dia
     public int totalEntregasDelDia() {
         return historialDia.tamano();
     }
 
+    // Tiempo promedio de entrega (en min)
     public double tiempoPromedioEntrega() {
         if (historialDia.tamano() == 0) {
             return 0.0;
@@ -76,7 +79,7 @@ public class GestorEntregas {
         return c == 0 ? 0.0 : suma / c;
     }
 
-    
+    // Asigna repartidor a entregas filtradas por distrito
     public void asignarRepartidorPorDistrito(String distrito, String repartidor) {
         Object[] arr = cola.toArray();
         int c = 0;
@@ -99,10 +102,12 @@ public class GestorEntregas {
     }
 
     // 6. Estadísticas
+    // Total de entregas pendientes en cola
     public int totalEntregasPendientes() {
         return cola.size();
     }
 
+    // Conteo de entregas por distrito (dia)
     public void entregasPorDistrito() {
         Object[] arr = historialDia.toArray();
         // conteo simple sin mapas
@@ -132,6 +137,7 @@ public class GestorEntregas {
         }
     }
 
+    // Conteo de entregas completadas por repartidor
     public void eficienciaRepartidor() {
         Object[] arr = historialDia.toArray();
         String[] rep = new String[arr.length];

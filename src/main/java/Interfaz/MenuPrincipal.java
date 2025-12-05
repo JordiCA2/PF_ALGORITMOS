@@ -3,22 +3,25 @@ package interfaz;
 import java.util.Scanner;
 import servicios.GestorInventario;
 
+// Menu principal para navegar entre modulos
 public class MenuPrincipal {
 
-    private Scanner scanner;             // ← FALTABA ESTO
+    private Scanner scanner;             
     private MenuInventario menuInventario;
     private GestorInventario inventario;
     private MenuPedidos menuPedidos;
     private MenuReportes menuReportes;
 
+    // Constructor por defecto para crear inventario compartido
     public MenuPrincipal(Scanner scanner) {
-        this.scanner = scanner;          // ← GUARDARLO COMO ATRIBUTO
+        this.scanner = scanner;          
         this.inventario = new GestorInventario();
         this.menuInventario = new MenuInventario(scanner, inventario);
         this.menuPedidos = new MenuPedidos(scanner, inventario);
         this.menuReportes = new MenuReportes(scanner);
     }
     
+    // Constructor con inventario inyectado que usa instancias compartidas
     public MenuPrincipal(Scanner scanner, GestorInventario inventario) {
         this.scanner = scanner;
         this.menuInventario = new MenuInventario(scanner, inventario);
@@ -26,6 +29,7 @@ public class MenuPrincipal {
         this.menuReportes = new MenuReportes(scanner);
     }
 
+    // Bucle principal para la navegacion (interfaz)
     public void mostrar() {
         int opcion;
         do {

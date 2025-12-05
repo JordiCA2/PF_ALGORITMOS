@@ -1,5 +1,6 @@
 package estructuras;
 
+// Lista enlazada simple generica
 public class ListaEnlazada<E> {
 
     private static class Nodo<E> {
@@ -16,6 +17,7 @@ public class ListaEnlazada<E> {
     private Nodo<E> cola;
     private int tamano;
 
+    // Agregar al final de la lista
     public void agregar(E valor) {
         Nodo<E> n = new Nodo<>(valor);
         if (cabeza == null) {
@@ -28,14 +30,17 @@ public class ListaEnlazada<E> {
         tamano++;
     }
 
+    // Indica si no hay elementos
     public boolean estaVacia() {
         return tamano == 0;
     }
 
+    // Retorna el numero de elementos
     public int tamano() {
         return tamano;
     }
 
+    // Obtiene el elemento por indice
     public E obtener(int indice) {
         if (indice < 0 || indice >= tamano) {
             return null;
@@ -47,6 +52,7 @@ public class ListaEnlazada<E> {
         return cur.dato;
     }
 
+    // Convierte a arreglo en el mismo orden
     public Object[] toArray() {
         Object[] arr = new Object[tamano];
         Nodo<E> cur = cabeza;
@@ -58,6 +64,7 @@ public class ListaEnlazada<E> {
         return arr;
     }
 
+    // Elimina elemento por indice
     public boolean eliminarPorIndice(int indice) {
         if (indice < 0 || indice >= tamano) {
             return false;
@@ -87,6 +94,7 @@ public class ListaEnlazada<E> {
         return true;
     }
 
+    // Busca el primer elemento que cumple la condicion
     public E buscar(Condicion<E> condicion) {
         Nodo<E> cur = cabeza;
         while (cur != null) {
@@ -98,6 +106,7 @@ public class ListaEnlazada<E> {
         return null;
     }
 
+    // Crea una nueva lista con elementos que cumplen la condicion
     public ListaEnlazada<E> filtrar(Condicion<E> condicion) {
         ListaEnlazada<E> nueva = new ListaEnlazada<E>();
         Nodo<E> cur = cabeza;
@@ -110,6 +119,7 @@ public class ListaEnlazada<E> {
         return nueva;
     }
 
+    // Reemplaza el elemento en un indice por uno nuevo
     public boolean reemplazar(int indice, E nuevo) {
         if (indice < 0 || indice >= tamano) {
             return false;
@@ -122,6 +132,7 @@ public class ListaEnlazada<E> {
         return true;
     }
 
+    // Elimina el primer elemento que cumple la condicion
     public boolean eliminarSi(Condicion<E> condicion) {
         Nodo<E> cur = cabeza;
         Nodo<E> prev = null;

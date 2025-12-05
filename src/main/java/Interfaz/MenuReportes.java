@@ -5,20 +5,25 @@ import servicios.GestorHistorial;
 
 import java.util.Scanner;
 
+// Menu de reportes: hsitorial y metricas de entrega
 public class MenuReportes {
 
     private Scanner scanner;
     private GestorEntregas entregas = new GestorEntregas();
     private GestorHistorial historial = GestorHistorial.instancia;
     
+    // utilidad para solicitar texto con una etiqueta
     private String pedirTexto(String etiqueta) {
         System.out.println(etiqueta + " ");
         return scanner.nextLine();
     }
+    
+    // Constructor que recibe scanner para interaccion
     public MenuReportes(Scanner scanner) {
         this.scanner = scanner;
     }
 
+    // Muestra menu de reportes y ejecuta acciones
     public void mostrar() {
         int op;
         do {

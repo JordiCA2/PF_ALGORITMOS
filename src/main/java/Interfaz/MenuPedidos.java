@@ -6,21 +6,25 @@ import servicios.GestorInventario;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// Menu de pedidos
 public class MenuPedidos {
 
     private Scanner scanner;
     private GestorPedidos gestor;
 
+    // Constructor que crea gestor de pedidos independiente
     public MenuPedidos(Scanner sc) {
         this.scanner = sc;
         this.gestor = new GestorPedidos();
     }
     
+    // constructor que usa inventario compartido inyectado
     public MenuPedidos(Scanner sc, GestorInventario inventario) {
         this.scanner = sc;
         this.gestor = new GestorPedidos(inventario);
     }
 
+    // Muestra menu de pedidos y ejecuta acciones
     public void mostrar() {
         int op;
         do {
@@ -52,6 +56,7 @@ public class MenuPedidos {
     }
 
     
+    // Busca y muestra un pedido por ID
     private void buscarPedidoPorId() {
         System.out.print("ID: ");
         String id = scanner.nextLine();
@@ -59,6 +64,7 @@ public class MenuPedidos {
         System.out.println(p != null ? p : "❌ No encontrado");
     }
 
+    // Muestra estadisticas de pedidos
     private void verEstadisticas() {
         System.out.println("Premium: " + gestor.totalPedidosPorTipo(TipoCliente.PREMIUM));
         System.out.println("Regular: " + gestor.totalPedidosPorTipo(TipoCliente.REGULAR));
@@ -67,6 +73,7 @@ public class MenuPedidos {
         System.out.println("Promedio de productos/pedido: " + gestor.promedioProductosPorPedido());
     }
 
+    // Registra un nuevo pedido con items
     private void registrarPedido() {
         System.out.print("ID Pedido: ");
         String id = scanner.nextLine();

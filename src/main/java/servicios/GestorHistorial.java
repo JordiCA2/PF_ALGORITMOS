@@ -4,6 +4,7 @@ import estructuras.Pila;
 import modelos.Operacion;
 import modelos.TipoOperacion;
 
+// Gestor de historial, singleton con pila de operaciones
 public class GestorHistorial {
 
     // Singleton: todos los módulos usarán la misma instancia
@@ -26,7 +27,7 @@ public class GestorHistorial {
         return historial.pop();
     }
 
-    
+    // Deshace la ultima operacion y revierte efectos
     public boolean deshacerUltima(GestorInventario inv, GestorPedidos ped) {
         Operacion op = historial.pop();
         if (op == null) {
@@ -108,6 +109,7 @@ public class GestorHistorial {
         }
     }
 
+    // Muestra las ultimas n operaciones sin perder la pila
     public void mostrarUltimas(int n) {
         if (n <= 0) {
             return;
@@ -125,6 +127,7 @@ public class GestorHistorial {
         }
     }
 
+    // Busca operaciones por tipo y retorna un arreglo
     public Operacion[] buscarPorTipo(TipoOperacion t) {
         estructuras.Pila<Operacion> aux = new estructuras.Pila<>();
         java.util.ArrayList<Operacion> res = new java.util.ArrayList<>();
@@ -141,6 +144,7 @@ public class GestorHistorial {
         return res.toArray(new Operacion[0]);
     }
 
+    // Indica si hay operaciones registradas
     public boolean hayOperaciones() {
         return !historial.estaVacia();
     }

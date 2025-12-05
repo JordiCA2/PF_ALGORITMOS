@@ -1,5 +1,6 @@
 package estructuras;
 
+// Cola FIFO generica
 public class Cola<T> {
 
     private class Nodo {

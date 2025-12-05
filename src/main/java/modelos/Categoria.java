@@ -1,5 +1,6 @@
 package modelos;
 
+// Entidad de categoria, agrupa productos por caracteristicas
 public class Categoria {
 
     private String id;
@@ -8,6 +9,7 @@ public class Categoria {
     private String caracteristicas;
     private int cantidadProductos;
     
+    // Constructor que define datos basicos de la categoria
     public Categoria(String id, String nombre, String descripcion, String caracteristicas) {
         this.id = id;
         this.nombre = nombre;

@@ -3,6 +3,7 @@ package servicios;
 import estructuras.ListaEnlazada;
 import modelos.Categoria;
 
+// Gestor de categorias, CRUD y metricas vinculadas al inventario
 public class GestorCategorias {
 
     private ListaEnlazada<Categoria> categorias = new ListaEnlazada<>();
@@ -10,14 +11,14 @@ public class GestorCategorias {
     // Agregar categoría
     public void agregarCategoria(String id, String nombre, String descripcion, String caracteristicas) {
         if (buscarPorId(id) != null) {
-            System.out.println("❌ ID duplicado");
+            System.out.println(" ID duplicado");
             return;
         }
         Categoria c = new Categoria(id, nombre, descripcion, caracteristicas);
         categorias.agregar(c);
     }
 
-    
+    // Buscar categoria por ID
     public Categoria buscarPorId(String id) {
         for (int i = 0; i < categorias.tamano(); i++) {
             Categoria c = categorias.obtener(i);
@@ -73,14 +74,17 @@ public boolean eliminarCategoria(String nombre) {
         return arr;
     }
 
+    // Cantidad total de categorias
     public int getCantidadCategorias() {
         return categorias.tamano();
     }
 
+    // Lista productos de una categoria usando el inventario
     public modelos.Producto[] listarProductosPorCategoria(String nombreCategoria, GestorInventario inv) {
         return inv.productosPorCategoria(nombreCategoria);
     }
 
+    // Eliminar categoria por ID si no tiene productos asociados
     public boolean eliminarCategoria(String id, GestorInventario inv) {
         Categoria c = buscarPorId(id);
         if (c == null) {
@@ -100,10 +104,12 @@ public boolean eliminarCategoria(String nombre) {
         return false;
     }
 
+    // Numero de productos en una categoria
     public int numeroProductos(String nombreCategoria, GestorInventario inv) {
         return inv.productosPorCategoria(nombreCategoria).length;
     }
 
+    // Categoria con mayor cantidad de productos
     public Categoria categoriaConMasProductos(GestorInventario inv) {
         Categoria mejor = null;
         int max = -1;
@@ -118,6 +124,7 @@ public boolean eliminarCategoria(String nombre) {
         return mejor;
     }
 
+    // Categoria con menor stock total acumulado
     public Categoria categoriaMenorStockTotal(GestorInventario inv) {
         Categoria peor = null;
         int min = Integer.MAX_VALUE;

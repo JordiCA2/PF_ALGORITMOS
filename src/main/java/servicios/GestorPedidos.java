@@ -8,10 +8,12 @@ public class GestorPedidos {
     private final ColaConPrioridad cola = new ColaConPrioridad();
     private final GestorInventario inventario;
     
+    // Constructor que crea inventario propio
     public GestorPedidos() {
         this.inventario = new GestorInventario();
     }
     
+    // Constructor que usa inventario compartido
     public GestorPedidos(GestorInventario inventario) {
         this.inventario = inventario;
     }
@@ -84,6 +86,7 @@ public class GestorPedidos {
         }
     }
 
+    // Total de pedidos por tipo de cliente
     public int totalPedidosPorTipo(TipoCliente tipo) {
         int c = 0;
         Pedido[] arr = cola.pendientes();
@@ -95,6 +98,7 @@ public class GestorPedidos {
         return c;
     }
 
+    // Pedido con mayor valor total
     public Pedido pedidoMayorValor() {
         Pedido[] arr = cola.pendientes();
         if (arr.length == 0) {
@@ -109,6 +113,7 @@ public class GestorPedidos {
         return max;
     }
 
+    // Promedio de productos por pedido
     public double promedioProductosPorPedido() {
         Pedido[] arr = cola.pendientes();
         if (arr.length == 0) {
