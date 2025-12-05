@@ -40,7 +40,12 @@ public class MenuPrincipal {
             System.out.println("4. Salir");
             System.out.print("Opción: ");
 
-            opcion = Integer.parseInt(scanner.nextLine());
+            String input = scanner.nextLine();
+            try {
+                opcion = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                opcion = -1;
+            }
 
             switch (opcion) {
                 case 1 -> menuInventario.mostrar();

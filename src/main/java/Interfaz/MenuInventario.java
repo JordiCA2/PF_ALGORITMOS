@@ -34,8 +34,13 @@ public class MenuInventario {
             System.out.println("10. Volver");
             System.out.print("Opción: ");
 
-            opcion = Integer.parseInt(scanner.nextLine());
-
+            String input = scanner.nextLine();
+            try {
+                opcion = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                opcion = -1;
+            }
+            
             switch (opcion) {
                 case 1 ->
                     agregarProducto();

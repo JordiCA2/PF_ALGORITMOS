@@ -37,8 +37,13 @@ public class MenuPedidos {
             System.out.println("6. Volver");
             System.out.print("Opción: ");
 
-            op = Integer.parseInt(scanner.nextLine());
-
+            String input = scanner.nextLine();
+            try {
+                op = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                op = -1;
+            }
+            
             switch (op) {
                 case 1 ->
                     registrarPedido();
