@@ -14,8 +14,12 @@ public class MenuReportes {
     
     // utilidad para solicitar texto con una etiqueta
     private String pedirTexto(String etiqueta) {
-        System.out.println(etiqueta + " ");
-        return scanner.nextLine();
+        while (true) {
+            System.out.println(etiqueta + " ");
+            String s = scanner.nextLine().trim();
+            if (!s.isEmpty()) return s;
+            System.out.println("Entrada inválida.");
+        }
     }
     
     // Constructor que recibe scanner para interaccion

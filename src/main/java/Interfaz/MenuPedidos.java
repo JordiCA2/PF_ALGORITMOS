@@ -11,17 +11,44 @@ public class MenuPedidos {
 
     private Scanner scanner;
     private GestorPedidos gestor;
+    private servicios.GestorInventario inventario;
 
+    private int leerInt(String etiqueta) {
+        while (true) {
+            System.out.print(etiqueta + " ");
+            String s = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada invalida.");
+            }
+        }
+    }
+    
+    private double leerDouble(String etiqueta) {
+        while (true) {
+            System.out.print(etiqueta + " ");
+            String s = scanner.nextLine().trim().replace(',', '.');
+            try {
+                return Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada invalida.");
+            }
+        }
+    }
+    
     // Constructor que crea gestor de pedidos independiente
     public MenuPedidos(Scanner sc) {
         this.scanner = sc;
         this.gestor = new GestorPedidos();
+        this.inventario = new servicios.GestorInventario();
     }
     
     // constructor que usa inventario compartido inyectado
     public MenuPedidos(Scanner sc, GestorInventario inventario) {
         this.scanner = sc;
         this.gestor = new GestorPedidos(inventario);
+        this.inventario = inventario;
     }
 
     // Muestra menu de pedidos y ejecuta acciones
@@ -80,41 +107,96 @@ public class MenuPedidos {
 
     // Registra un nuevo pedido con items
     private void registrarPedido() {
-        System.out.print("ID Pedido: ");
-        String id = scanner.nextLine();
+        String id;
+        while (true) {
+            System.out.print("ID Pedido: ");
+            id = scanner.nextLine().trim();
+            if (id.isEmpty()) {
+                System.out.println("Entrada inválida.");
+                continue;
+            }
+            if (gestor.buscarPorId(id) != null) {
+                System.out.println("❌ Ya existe un pedido con ese ID.");
+                continue;
+            }
+            break;
+        }
 
-        System.out.print("Nombre del cliente: ");
-        String nombre = scanner.nextLine();
+        String nombre;
+        while (true) {
+            System.out.print("Nombre del cliente: ");
+            nombre = scanner.nextLine().trim();
+            if (nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) break;
+            System.out.println("Entrada inválida. Solo letras y espacios.");
+        }
 
-        System.out.print("Dirección: ");
-        String direccion = scanner.nextLine();
+        String direccion;
+        while (true) {
+            System.out.print("Dirección: ");
+            direccion = scanner.nextLine().trim();
+            if (!direccion.isEmpty()) break;
+            System.out.println("Entrada inválida.");
+        }
 
-        System.out.println("Tipo de cliente: 1=VIP, 2=REGULAR");
-        TipoCliente tipoCliente = scanner.nextLine().equals("1") ? TipoCliente.PREMIUM : TipoCliente.REGULAR;
+        int opCliente;
+        while (true) {
+            System.out.println("Tipo de cliente: 1=VIP, 2=REGULAR");
+            String in = scanner.nextLine().trim();
+            if (in.equals("1") || in.equals("2")) { opCliente = Integer.parseInt(in); break; }
+            System.out.println("Entrada inválida. Use 1 o 2.");
+        }
+        TipoCliente tipoCliente = opCliente == 1 ? TipoCliente.PREMIUM : TipoCliente.REGULAR;
 
-        System.out.println("Tipo de entrega: 1=RÁPIDA, 2=PROGRAMADA");
-        TipoEntrega tipoEntrega = scanner.nextLine().equals("1") ? TipoEntrega.EXPRESS : TipoEntrega.NORMAL;
+        int opEntrega;
+        while (true) {
+            System.out.println("Tipo de entrega: 1=RÁPIDA, 2=PROGRAMADA");
+            String in = scanner.nextLine().trim();
+            if (in.equals("1") || in.equals("2")) { opEntrega = Integer.parseInt(in); break; }
+            System.out.println("Entrada inválida. Use 1 o 2.");
+        }
+        TipoEntrega tipoEntrega = opEntrega == 1 ? TipoEntrega.EXPRESS : TipoEntrega.NORMAL;
 
         ArrayList<ItemPedido> items = new ArrayList<>();
 
         boolean mas;
         do {
-            System.out.print("Código producto: ");
-            String cod = scanner.nextLine();
+            String cod;
+            while (true) {
+                cod = String.valueOf(leerInt("Código producto:"));
+                if (inventario.buscarProducto(cod) != null) break;
+                System.out.println("❌ Producto no existe.");
+            }
 
-            System.out.print("Nombre producto: ");
-            String nom = scanner.nextLine();
+            String nom;
+            while (true) {
+                System.out.print("Nombre producto: ");
+                nom = scanner.nextLine().trim();
+                if (nom.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) break;
+                System.out.println("Entrada inválida. Solo letras y espacios.");
+            }
 
-            System.out.print("Cantidad: ");
-            int cant = Integer.parseInt(scanner.nextLine());
+        int cant = leerInt("Cantidad:");
+        while (cant <= 0) {
+            System.out.println("Entrada inválida. Debe ser mayor que 0.");
+            cant = leerInt("Cantidad:");
+        }
 
-            System.out.print("Precio unitario: ");
-            double precio = Double.parseDouble(scanner.nextLine());
+        double precio = leerDouble("Precio unitario:");
+        while (precio <= 0) {
+            System.out.println("Entrada inválida. Debe ser mayor que 0.");
+            precio = leerDouble("Precio unitario:");
+        }
 
             items.add(new ItemPedido(cod, nom, cant, precio, cant * precio));
 
-            System.out.print("¿Agregar otro item? (1=Sí / 0=No): ");
-            mas = scanner.nextLine().equals("1");
+            String cont;
+            while (true) {
+                System.out.print("¿Agregar otro item? (1=Sí / 0=No): ");
+                cont = scanner.nextLine().trim();
+                if (cont.equals("1") || cont.equals("0")) break;
+                System.out.println("Entrada inválida. Use 1 o 0.");
+            }
+            mas = cont.equals("1");
 
         } while (mas);
 

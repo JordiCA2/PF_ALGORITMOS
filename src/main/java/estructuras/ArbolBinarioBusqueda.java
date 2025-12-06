@@ -205,6 +205,48 @@ public class ArbolBinarioBusqueda {
     }
 
     private int comparar(String a, String b) {
+        if (a == null && b == null) return 0;
+        if (a == null) return -1;
+        if (b == null) return 1;
+        if (soloDigitos(a) && soloDigitos(b)) {
+            try {
+                int va = Integer.parseInt(a);
+                int vb = Integer.parseInt(b);
+                return Integer.compare(va,vb);
+            } catch (NumberFormatException e) {
+                
+            }
+        }
+        
+        int ia = indicePrimerDigito(a);
+        int ib = indicePrimerDigito(b);
+        if (ia > 0 && ib > 0 && Character.toUpperCase(a.charAt(0)) == Character.toUpperCase(b.charAt(0))) {
+            String na = a.substring(ia);
+            String nb = b.substring(ib);
+            if (soloDigitos(na) && soloDigitos(nb)) {
+                try {
+                    int va = Integer.parseInt(na);
+                    int vb = Integer.parseInt(nb);
+                    if (va != vb) return Integer.compare(va, vb);
+                    return a.compareTo(b);
+                } catch (NumberFormatException e) {
+                }
+            }
+        }
         return a.compareTo(b);
+    }
+
+    private int indicePrimerDigito(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isDigit(s.charAt(i))) return i;
+        }
+        return -1;
+    }
+
+    private boolean soloDigitos(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) return false;
+        }
+        return true;
     }
 }

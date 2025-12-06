@@ -11,6 +11,62 @@ public class MenuInventario {
     private Scanner scanner;
     private GestorInventario inventario = new GestorInventario();
 
+    private double leerDouble(String etiqueta) {
+        while(true) {
+            System.out.print(etiqueta + " ");
+            String s = scanner.nextLine().trim().replace(',','.');
+            try {
+                return Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada invalida.");
+            }
+        }
+    }
+    
+    private int leerInt(String etiqueta) {
+        while (true) {
+            System.out.print(etiqueta + " ");
+            String s = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada invalida.");
+            }
+        }
+    }
+
+    private String leerTexto(String etiqueta) {
+        while (true) {
+            System.out.print(etiqueta + " ");
+            String s = scanner.nextLine().trim();
+            if (s.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\\\s]+$")) {
+                return s;
+            }
+            System.out.println("Entrada invalida. Solo letras y espacios.");
+        }
+    }
+    
+        private String leerNoVacio(String etiqueta) {
+        while (true) {
+            System.out.print(etiqueta + " ");
+            String s = scanner.nextLine().trim();
+            if (!s.isEmpty()) {
+                return s;
+            }
+            System.out.println("Entrada inválida.");
+        }
+    }
+
+    private boolean leerBooleanTF(String etiqueta) {
+        while (true) {
+            System.out.print(etiqueta + " ");
+            String s = scanner.nextLine().trim().toLowerCase();
+            if (s.equals("true") || s.equals("1")) return true;
+            if (s.equals("false") || s.equals("0")) return false;
+            System.out.println("Entrada inválida. Use true/false o 1/0.");
+        }
+    }
+    
     // Constructor que usa inventario compartido inyectado
     public MenuInventario(Scanner scanner, GestorInventario inventario) {
         this.scanner = scanner;
@@ -65,28 +121,36 @@ public class MenuInventario {
         } while (opcion != 10);
     }
 
-    // Registra producto
     private void agregarProducto() {
-        System.out.print("Código: ");
-        String codigo = scanner.nextLine();
+        int codigoNum = leerInt("Código:");
+        while (codigoNum <= 0) {
+            System.out.println("Entrada inválida. Debe ser entero positivo.");
+            codigoNum = leerInt("Código:");
+        }
+        String codigo = String.valueOf(codigoNum);
+        if (inventario.buscarProducto(codigo) != null) {
+            System.out.println("❌ Ya existe un producto con ese código.");
+            return;
+        }
 
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
+        String nombre = leerTexto("Nombre:");
+        String categoria = leerTexto("Categoría:");
 
-        System.out.print("Categoría: ");
-        String categoria = scanner.nextLine();
+        double precio = leerDouble("Precio:");
+        while (precio <= 0) {
+            System.out.println("Entrada inválida. Debe ser mayor que 0.");
+            precio = leerDouble("Precio:");
+        }
 
-        System.out.print("Precio: ");
-        double precio = Double.parseDouble(scanner.nextLine());
+        int stock = leerInt("Stock:");
+        while (stock < 0) {
+            System.out.println("Entrada inválida. No puede ser negativo.");
+            stock = leerInt("Stock:");
+        }
 
-        System.out.print("Stock: ");
-        int stock = Integer.parseInt(scanner.nextLine());
+        boolean bio = leerBooleanTF("¿Es biodegradable? (true/false o 1/0):");
 
-        System.out.print("¿Es biodegradable? (true/false): ");
-        boolean bio = Boolean.parseBoolean(scanner.nextLine());
-
-        System.out.print("Material reciclado: ");
-        String mat = scanner.nextLine();
+        String mat = leerNoVacio("Material reciclado:");
 
         boolean ok = inventario.agregarProducto(codigo, nombre, categoria, precio, stock, bio, mat);
         System.out.println(ok ? "✔ Producto agregado." : "❌ Ya existe un producto con ese código.");
@@ -94,37 +158,39 @@ public class MenuInventario {
 
     // Elimina un producto por codigo
     private void eliminarProducto() {
-        System.out.print("Código: ");
-        String codigo = scanner.nextLine();
+        String codigo = String.valueOf(leerInt("Codigo:"));
         boolean ok = inventario.eliminarProducto(codigo);
         System.out.println(ok ? "Eliminado." : "Producto no existe.");
     }
 
     // busca y muestra un producto por codigo
     private void buscarProducto() {
-        System.out.print("Código: ");
-        String codigo = scanner.nextLine();
-
+        String codigo = String.valueOf(leerInt("Codigo:"));
         Producto p = inventario.buscarProducto(codigo);
         System.out.println(p != null ? p : "❌ No encontrado.");
     }
 
     // Actualiza el stock de un producto
     private void actualizarStock() {
-        System.out.print("Código: ");
-        String codigo = scanner.nextLine();
+        String codigo = String.valueOf(leerInt("Código:"));
 
-        System.out.print("Nuevo stock: ");
-        int nuevo = Integer.parseInt(scanner.nextLine());
+        int nuevo = leerInt("Nuevo stock:");
+        while (nuevo < 0) {
+            System.out.println("Entrada inválida. No puede ser negativo.");
+            nuevo = leerInt("Nuevo stock:");
+        }
 
         boolean ok = inventario.actualizarStock(codigo, nuevo);
-        System.out.println(ok ? "✔ Actualizado." : "❌ Producto no existe.");
+        System.out.println(ok ? " Actualizado." : " Producto no existe.");
     }
 
     // Repore de productos con stock bajo
     private void reporteStockBajo() {
-        System.out.print("Límite: ");
-        int limite = Integer.parseInt(scanner.nextLine());
+        int limite = leerInt("Límite:");
+        while (limite < 0) {
+            System.out.println("Entrada inválida. No puede ser negativo.");
+            limite = leerInt("Límite:");
+        }
         inventario.generarReporteStockBajo(limite);
     }
 
@@ -146,10 +212,20 @@ public class MenuInventario {
 
     // Lista productos entre un rango de precio
     private void listarPorRangoPrecio() {
-        System.out.print("Precio mínimo: ");
-        double min = Double.parseDouble(scanner.nextLine());
-        System.out.print("Precio máximo: ");
-        double max = Double.parseDouble(scanner.nextLine());
+        double min = leerDouble("Precio mínimo:");
+        while (min < 0) {
+            System.out.println("Entrada inválida. No puede ser negativo.");
+            min = leerDouble("Precio mínimo:");
+        }
+        double max = leerDouble("Precio máximo:");
+        while (max < 0) {
+            System.out.println("Entrada inválida. No puede ser negativo.");
+            max = leerDouble("Precio máximo:");
+        }
+        if (min > max) {
+            double t = min; min = max; max = t;
+            System.out.println("Rango corregido: mínimo mayor que máximo.");
+        }
         Producto[] arr = inventario.productosPorRangoPrecio(min, max);
         if (arr.length == 0) {
             System.out.println("(sin resultados)");
